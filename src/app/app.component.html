@@ -1,4 +1,7 @@
-<div>
+<div class="p-4">
+  <h1 class="font-bold text-3xl mb-4">
+    {{ displayMonth.format("MMMM") }} {{ displayMonth.year() }}
+  </h1>
   <ul>
     <li>
       <ul class="flex flex-row">
@@ -12,7 +15,7 @@
     <li>
       <ul class="flex flex-row">
         @for (dayOfWeek of week; track $index) {
-        <li class="w-[100px]">
+        <li class="w-[100px] cursor-pointer" (click)="selecteDate(dayOfWeek)">
           {{ dayOfWeek && dayOfWeek.dates() }}
         </li>
         }
@@ -22,8 +25,8 @@
   </ul>
 
   <div class="mt-4">
-    <p-button label="previous" class="mr-1"></p-button>
-    <p-button label="next"></p-button>
+    <p-button label="previous" class="mr-1" (onClick)="previous()"></p-button>
+    <p-button label="next" (onClick)="next()"></p-button>
   </div>
   <!-- 
   <p-calendar

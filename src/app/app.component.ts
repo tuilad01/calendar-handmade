@@ -28,16 +28,22 @@ export class AppComponent {
 
   selectedMonth: any[] = [];
   selectedDayOfWeek: any[] = [];
+  displayMonth = moment();
+  selectedStartDayOfWeek = 0;
+
   constructor() {
-    const now = moment();
     this.selectedMonth = this.generateMonth(
-      now.month() - 2,
-      now.year(),
-      1,
+      this.displayMonth.month(),
+      this.displayMonth.year(),
+      this.selectedStartDayOfWeek,
       false
     );
-    this.selectedDayOfWeek = this.generateWeek(0);
-    console.log(this.generateWeek(0));
+
+    console.log(this.selectedMonth);
+
+    this.selectedDayOfWeek = this.generateWeek(this.selectedStartDayOfWeek);
+
+    console.log(this.generateWeek(this.selectedStartDayOfWeek));
   }
 
   generateWeek(startDayOfWeek: number) {
@@ -85,7 +91,8 @@ export class AppComponent {
       startDate = moment(startDate).subtract(1, 'days');
     }
 
-    let endDayOfWeek = (startDayOfWeek - 1) % 7;
+    let endDayOfWeek =
+      startDayOfWeek - 1 - 7 * Math.floor((startDayOfWeek - 1) / 7);
     let endDate = moment(toDate);
     while (endDate.day() != endDayOfWeek) {
       endDate = moment(endDate).add(1, 'days');
@@ -120,35 +127,26 @@ export class AppComponent {
     return list;
   }
 
-  ngAfterViewInit() {
-    const now = new Date();
-    const month = now.getMonth();
-
-    const lastMonth = this.calendar.createMonth(month - 1, 2024);
-
-    //this.divHello.months.shift(lastMonth.dates[lastMonth.dates?.length-1])
-    if (lastMonth.dates) {
-      this.calendar.months[0].dates!.unshift(
-        lastMonth.dates[lastMonth.dates.length - 1]
-      );
-
-      this.calendar.months[0].dates!.unshift(
-        lastMonth.dates[lastMonth.dates.length - 2]
-      );
-
-      //console.log(this.calendar.months);
-    }
+  selecteDate(date: moment.Moment) {
+    console.log(date.date());
   }
 
-  rangeDates: Date[] = [
-    new Date(2024, 7, 26, 0, 0, 0),
-    new Date(2024, 8, 25, 0, 0, 0),
-  ];
-
-  // show() {
-  //   console.log(this.rangeDates);
-  // }
-  selecteDate(date: Date) {
-    //console.log(date);
+  previous() {
+    this.displayMonth = moment(this.displayMonth).subtract(1, 'months');
+    this.selectedMonth = this.generateMonth(
+      this.displayMonth.month(),
+      this.displayMonth.year(),
+      this.selectedStartDayOfWeek,
+      false
+    );
+  }
+  next() {
+    this.displayMonth = moment(this.displayMonth).add(1, 'months');
+    this.selectedMonth = this.generateMonth(
+      this.displayMonth.month(),
+      this.displayMonth.year(),
+      this.selectedStartDayOfWeek,
+      false
+    );
   }
 }
